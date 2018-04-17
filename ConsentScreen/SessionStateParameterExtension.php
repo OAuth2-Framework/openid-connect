@@ -11,10 +11,10 @@ declare(strict_types=1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace OAuth2Framework\Component\OpenIdConnect\AfterConsentScreen;
+namespace OAuth2Framework\Component\OpenIdConnect\ConsentScreen;
 
-use OAuth2Framework\Component\AuthorizationEndpoint\AfterConsentScreen\Extension;
 use OAuth2Framework\Component\AuthorizationEndpoint\Authorization;
+use OAuth2Framework\Component\AuthorizationEndpoint\ConsentScreen\Extension;
 use Psr\Http\Message\ServerRequestInterface;
 
 abstract class SessionStateParameterExtension implements Extension
