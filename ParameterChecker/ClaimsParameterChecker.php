@@ -11,17 +11,14 @@ declare(strict_types=1);
  * of the MIT license.  See the LICENSE file for details.
  */
 
-namespace OAuth2Framework\Component\OpenIdConnect;
+namespace OAuth2Framework\Component\OpenIdConnect\ParameterChecker;
 
 use OAuth2Framework\Component\AuthorizationEndpoint\Authorization;
 use OAuth2Framework\Component\AuthorizationEndpoint\Exception\OAuth2AuthorizationException;
 use OAuth2Framework\Component\AuthorizationEndpoint\ParameterChecker\ParameterChecker;
 use OAuth2Framework\Component\Core\Message\OAuth2Message;
 
-/**
- * Class NonceParameterChecker.
- */
-final class NonceParameterChecker implements ParameterChecker
+final class ClaimsParameterChecker implements ParameterChecker
 {
     /**
      * {@inheritdoc}
@@ -29,8 +26,13 @@ final class NonceParameterChecker implements ParameterChecker
     public function check(Authorization $authorization): Authorization
     {
         try {
-            if (false !== strpos($authorization->getQueryParam('response_type'), 'id_token') && !$authorization->hasQueryParam('nonce')) {
-                throw new \InvalidArgumentException('The parameter "nonce" is mandatory when the response type "id_token" is used.');
+            if ($authorization->hasQueryParam('claims')) {
+                $decoded = json_decode($authorization->getQueryParam('claims'), true);
+                if (!is_array($decoded)) {
+                    throw new \InvalidArgumentException('Invalid "claims" parameter.');
+                }
+
+                return $authorization->withClaims($decoded);
             }
 
             return $authorization;
